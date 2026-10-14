@@ -1,0 +1,47 @@
+[
+  {
+    "book": "iemh2",
+    "source": "https://ncert.nic.in/textbook/pdf/iemh2ps.pdf",
+    "description": "Official NCERT preliminary PDF, page 1. Authentic title-page preview; separate exterior cover image not available at selector cover URL.",
+    "sourceSha256": "fe0eaaef40dd6fb53bffa99b361700a7e8f9faaef3d9ccd7f1870b98f56e6f9e",
+    "imageSha256": "f05eb54607df813e422c7dea9845c0c794c26d5e02f0049233a7822112a87b00",
+    "renderer": "PyMuPDF 1.26.5, first page at 72 dpi",
+    "checked": "2026-10-14"
+  },
+  {
+    "book": "iemh1",
+    "source": "https://ncert.nic.in/textbook/pdf/iemh1ps.pdf",
+    "description": "Official NCERT preliminary PDF, page 1. Authentic title-page preview; separate exterior cover image not available at selector cover URL.",
+    "sourceSha256": "e2e2f01f4ccba8fd5d9dbe7a48af89d882e3518e4e889ca139805b76cf43aca9",
+    "imageSha256": "a0c4fdfd1990f4e40547808533caddf39eab25a78d93098d40bbdba587f569bc",
+    "renderer": "PyMuPDF 1.26.5, first page at 72 dpi",
+    "checked": "2026-10-14"
+  },
+  {
+    "book": "iesc1",
+    "source": "https://ncert.nic.in/textbook/pdf/iesc1ps.pdf",
+    "description": "Official NCERT preliminary PDF, page 1. Authentic title-page preview; separate exterior cover image not available at selector cover URL.",
+    "sourceSha256": "6dfb484cc05eeea3886bd4db603b81e19c6b5e146d4a77a9a60a55cf12b2cdee",
+    "imageSha256": "bf716a093fedf0a5100f45af19a774c32f4fed7cd10e13db737b301ea1420c3d",
+    "renderer": "PyMuPDF 1.26.5, first page at 72 dpi",
+    "checked": "2026-10-14"
+  },
+  {
+    "book": "iest1",
+    "source": "https://ncert.nic.in/textbook/pdf/iest1ps.pdf",
+    "description": "Official NCERT preliminary PDF, page 1. Authentic title-page preview; separate exterior cover image not available at selector cover URL.",
+    "sourceSha256": "513a4c83675e10755e784e09728ae171b38826a6aee6cdb48f460cbec95ae25e",
+    "imageSha256": "2cb15dbd24bb4c4927ba36c5c78f99e57ebd4470021633ac9bd7a7fef6ea2501",
+    "renderer": "PyMuPDF 1.26.5, first page at 72 dpi",
+    "checked": "2026-10-14"
+  },
+  {
+    "book": "iest2",
+    "source": "https://ncert.nic.in/textbook/pdf/iest2ps.pdf",
+    "description": "Official NCERT preliminary PDF, page 1. Authentic title-page preview; separate exterior cover image not available at selector cover URL.",
+    "sourceSha256": "c089417d2d7df0b5eaa23a7e03134f12fc2a2dd652e3345a9756494c0d288696",
+    "imageSha256": "c62cfe1df1c09932457be2425f903f07e356236e62c998c57952993d0b78b70c",
+    "renderer": "PyMuPDF 1.26.5, first page at 72 dpi",
+    "checked": "2026-10-14"
+  }
+]
