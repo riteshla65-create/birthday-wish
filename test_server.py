@@ -10,6 +10,7 @@ import tempfile
 import time
 import unittest
 import threading
+import io
 import importlib.util
 from unittest.mock import patch
 from urllib.error import HTTPError
@@ -168,6 +169,17 @@ class PortalTests(unittest.TestCase):
                 provider.reset_mock()
                 _,result=self.request('/api/ask',{'book':'iemh1','question':'unfindabletopic','mode':'ai','scope':'book'})
                 provider.assert_not_called();self.assertIn('Book-only',result['message'])
+            for code in [401,403,404,429,400]:
+                error=HTTPError('https://api.openai.com/v1/responses',code,'synthetic-secret-must-not-leak',None,io.BytesIO(b'{"error":"synthetic-secret-must-not-leak"}'))
+                portal.AI_ATTEMPTS.clear()
+                with patch.object(portal,'ai_configured',return_value=True),patch.object(portal,'explain_with_ai',side_effect=error),patch('builtins.print') as diagnostic:
+                    status,result=self.request('/api/ask',{'book':'iemh1','question':'hlo','mode':'ai'})
+                    self.assertEqual(status,200)
+                    self.assertIn(str(code),result['message'])
+                    self.assertNotIn('synthetic-secret',json.dumps(result))
+                    self.assertNotIn('synthetic-secret',str(diagnostic.call_args_list))
+                    self.assertEqual(result['mode'],'extract')
+            portal.AI_ATTEMPTS.clear()
             with patch.object(portal,'ai_configured',return_value=True),patch.object(portal,'explain_with_ai',side_effect=TimeoutError):
                 _,result=self.request('/api/ask',{'book':'iemh1','question':'rational number','mode':'ai'})
                 self.assertEqual(result['mode'],'extract');self.assertIn('p/q',result['answer'])

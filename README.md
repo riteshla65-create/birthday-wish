@@ -89,3 +89,7 @@ To refresh the standalone file after changing catalog/text/notes/PNG previews, r
 ```
 
 Tests isolate database state and use synthetic identities, passwords, passages, and a synthetic PDF. They cover authentication, private paths, invalid/cross-origin requests, local import, book scoping, new catalog/source integrity, Hinglish/Hindi retrieval, missing AI configuration, and mocked AI requests. Browser checks additionally cover HTML-only replies, source references, subject filtering, saved books, progress, mobile layout and motion controls.
+
+### If AI replies fail after deployment
+
+The tutor now shows safe provider error categories and Render logs record only the HTTP status or exception type, without API keys, student questions or provider response bodies. HTTP 401 means the key was rejected; replace OPENAI_API_KEY privately in Render with a valid OpenAI key. HTTP 403 means an access restriction, 404 usually requires checking the configured model/endpoint, and 429 can mean a rate or credit/quota limit. Check your API billing and retry after a wait if rate limited. HTTP 400 means provider request settings were rejected. Network/timeout/incomplete replies are labelled separately. These messages identify the category; they do not verify that billing or credentials have been repaired. After pulling this update, manually deploy the latest commit in Render (automatic deploys are off).

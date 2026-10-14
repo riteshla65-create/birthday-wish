@@ -10,6 +10,7 @@ import time
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
+from urllib.error import HTTPError, URLError
 from tutor import rank_passages, short_answer, ai_configured, explain_with_ai
 from threading import Lock
 
@@ -56,6 +57,24 @@ def search_passages(question, book):
 RATE_LOCK = Lock()
 AI_ATTEMPTS = {}
 
+
+
+def ai_failure_message(error):
+    # Return only known categories, never provider bodies or credentials.
+    if isinstance(error, HTTPError):
+        messages = {
+            401: 'OpenAI API key accept nahi hui. Render mein OPENAI_API_KEY ko nayi valid OpenAI key se update karo.',
+            403: 'OpenAI account/project ko is request ki permission nahi hai. Account aur model access check karo.',
+            404: 'AI model ya endpoint available nahi hai. Render ka OPENAI_MODEL aur account model access check karo.',
+            429: 'OpenAI usage limit ya credits ki dikkat ho sakti hai. API billing/credits check karo; rate limit ho toh thodi der baad retry karo.',
+            400: 'OpenAI ne request settings reject ki. Model compatibility aur server configuration check karni hogi.',
+        }
+        return 'AI provider error (' + str(error.code) + '): ' + messages.get(error.code, 'AI provider abhi unavailable hai. Thodi der baad retry karo.')
+    if isinstance(error, TimeoutError):
+        return 'AI reply unavailable: request time out ho gayi. Thodi der baad retry karo.'
+    if isinstance(error, URLError):
+        return 'AI reply unavailable: server OpenAI se connect nahi kar paya. Thodi der baad retry karo.'
+    return 'AI reply unavailable: complete response nahi mila. Retry karo; agar baar-baar ho, server configuration check karo.'
 
 
 class Handler(SimpleHTTPRequestHandler):
@@ -199,8 +218,15 @@ class Handler(SimpleHTTPRequestHandler):
                         answer = explain_with_ai(question, next(b['title'] for b in BOOKS if b['id'] == book), matches, language, history, scope)
                         answer_mode = 'ai'
                         message = 'AI tutor · Book-only explanation; check the source pages.' if scope == 'book' else 'AI tutor · General knowledge may be used. Related NCERT extracts below, when available.'
-                    except Exception:
-                        message = 'AI reply is unavailable right now. Here is the quick textbook answer.'
+                    except Exception as error:
+                        message = ai_failure_message(error)
+                        # Safe status only: do not log exception text, keys or questions.
+                        diagnostic = 'HTTP ' + str(error.code) if isinstance(error, HTTPError) else type(error).__name__
+                        print('Classmate AI request failed: ' + diagnostic, flush=True)
+                        if re.search(r'\b(solve|calculate|solution|numerical)\b|\d.*[=+*/^−-]', question, re.I):
+                            answer = ''
+                        if answer:
+                            message += ' Neeche quick textbook extract hai; AI solution nahi.'
             return self.respond({'matches': matches, 'message': message, 'answer': answer, 'mode': answer_mode})
         return self.respond({'error': 'Not found.'}, 404)
 
